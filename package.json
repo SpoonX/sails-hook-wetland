@@ -1,0 +1,23 @@
+{
+  "name": "sails-hook-wetland",
+  "version": "0.0.1",
+  "description": "A sails hook that enables the use of wetland ORM.",
+  "main": "index.js",
+  "scripts": {
+  },
+  "author": {
+    "name": "RWOverdijk",
+    "email": "wesley@spoonx.nl"
+  },
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/spoonx/sails-hook-wetland.git"
+  },
+  "dependencies": {
+    "wetland": "^1.0.0-0"
+  },
+  "sails": {
+    "isHook": true
+  }
+}
