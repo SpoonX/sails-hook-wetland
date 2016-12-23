@@ -29,8 +29,6 @@ actionUtil.populateQuery = (query, associations, sails) => {
     return query;
   }
 
-  console.log(populates);
-
   return populates;
 };
 
