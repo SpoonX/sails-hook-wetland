@@ -2,6 +2,8 @@ const Mapping = require('wetland').Mapping;
 
 module.exports = class Model {
   constructor(name, entity) {
+    entity.mapping.completeMapping();
+
     let mapping   = entity.mapping;
     let relations = mapping.getRelations();
 
