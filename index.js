@@ -91,7 +91,11 @@ module.exports = sails => {
             sails.log.verbose('Running dev migrations happened successfully');
 
             callback();
-          }).catch(callback);
+          }).catch(error => {
+            sails.log.error('Running dev migrations failed.');
+
+            callback(error);
+          });
         } else {
           return callback();
         }
