@@ -4,6 +4,7 @@
   "description": "A sails hook that enables the use of wetland ORM.",
   "main": "index.js",
   "scripts": {
+    "postpublish": "git push upstream master && git push upstream --tags"
   },
   "author": {
     "name": "RWOverdijk",

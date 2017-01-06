@@ -68,7 +68,37 @@ module.exports = sails => {
 
         sails.emit('hook:orm:reloaded');
 
-        return callback();
+        if (sails.config.models.migrate) {
+          if (sails.config.models.migrate === 'safe') {
+            return callback();
+          }
+
+          if (sails.config.environment !== 'development') {
+            sails.log.warn(`Refusing to run dev migrations because environment '${sails.config.environment}' isn't developent.`);
+
+            return callback();
+          }
+
+          if (sails.config.models.migrate !== 'alter') {
+            sails.log.warn('Not running dev migrations. The only support method is "alter".');
+
+            return callback();
+          }
+
+          sails.log.verbose('Starting dev migrations...');
+
+          this.wetland.getMigrator().devMigrations().then(() => {
+            sails.log.verbose('Running dev migrations happened successfully');
+
+            callback();
+          }).catch(error => {
+            sails.log.error('Running dev migrations failed.');
+
+            callback(error);
+          });
+        } else {
+          return callback();
+        }
       });
     },
 

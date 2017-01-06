@@ -6,6 +6,7 @@ More documentation and examples will follow.
 ## Features
 * All default sails blueprints.
 * Nested populates.
+* Migrations.
 * Runs side-by-side with waterline.
 * Unit of work (transactions).
 * Dirty checking (optimized).
@@ -19,6 +20,7 @@ More documentation and examples will follow.
 2. `cd $_`
 3. `npm i sails-hook-wetland --save`
 4. Choose an adapter (list below) `npm i --save sqlite3`
+5. `mkdir api/entity`
 
 ## Configuration
 Out of the box, wetland works with sqlite3, so there's no need to configure anything.
@@ -30,8 +32,11 @@ The simplest configuration _(which will be what's used 9/10 times)_ is as follow
 **config/wetland.js**
 
 ```js
+const path = require('path');
+
 module.exports.wetland = {
-  stores: {
+  entityPath: path.resolve(process.cwd(), 'api', 'entity'),
+  stores    : {
     defaultStore: {
       client    : 'mysql',
       connection: {
