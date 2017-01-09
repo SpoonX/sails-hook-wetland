@@ -88,7 +88,7 @@ module.exports = sails => {
           sails.log.verbose('Starting dev migrations...');
 
           this.wetland.getMigrator().devMigrations().then(() => {
-            sails.log.verbose('Running dev migrations happened successfully');
+            sails.log.verbose('Running dev migrations happened successfully.');
 
             callback();
           }).catch(error => {
@@ -118,6 +118,10 @@ module.exports = sails => {
           req.getManager = getManager;
 
           req.getRepository = (Entity) => {
+            if (!Entity) {
+              Entity = actionUtil.parseModel(req).Entity;
+            }
+
             return getManager().getRepository(Entity);
           };
 
