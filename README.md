@@ -120,8 +120,11 @@ TBD
 
 ## Req methods
 
-### req.getRepository(Model)
-TBD
+### req.getRepository([Entity])
+Get the repository for provided Entity.
+If none was supplied, the Entity for the current blueprint will be used instead.
+
+**See also: [EntityRepository](https://wetland.spoonx.org/API/entity-repository.html).**
 
 ### req.getManager()
 TBD
