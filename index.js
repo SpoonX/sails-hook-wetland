@@ -46,6 +46,18 @@ module.exports = sails => {
       sails.config.globals.wetland = sails.config.globals.wetland || false;
     },
 
+    registerEntity: (name, Entity) => {
+      this.wetland.registerEntity(Entity);
+
+      this.registerModel(name, Entity);
+    },
+
+    registerModel: (name, Entity) => {
+      let model = new Model(name, Entity);
+
+      sails.models[model.identity] = model;
+    },
+
     initialize: callback => {
       sails.on('hook:orm:loaded', () => {
         this.wetland = new Wetland(sails.config.wetland);
@@ -53,11 +65,7 @@ module.exports = sails => {
         // Make model stubs
         let entities = this.wetland.getEntityManager().getEntities();
 
-        Object.getOwnPropertyNames(entities).forEach(name => {
-          let model = new Model(name, entities[name]);
-
-          sails.models[model.identity] = model;
-        });
+        Object.getOwnPropertyNames(entities).forEach(name => this.registerModel(name, entities[name]));
 
         // Override default blueprints
         Object.getOwnPropertyNames(blueprints).forEach(function(action) {
@@ -65,8 +73,6 @@ module.exports = sails => {
         });
 
         sails.wetland = this.wetland;
-
-        sails.emit('hook:orm:reloaded');
 
         if (sails.config.models.migrate) {
           if (sails.config.models.migrate === 'safe') {
