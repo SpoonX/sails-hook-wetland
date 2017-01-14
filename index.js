@@ -33,7 +33,7 @@ actionUtil.populateQuery = (query, associations, sails) => {
 };
 
 module.exports = sails => {
-  return {
+  let hook = {
     defaults: () => {
       return {
         wetland: {
@@ -49,7 +49,7 @@ module.exports = sails => {
     registerEntity: (name, Entity) => {
       this.wetland.registerEntity(Entity);
 
-      this.registerModel(name, Entity);
+      hook.registerModel(name, Entity);
     },
 
     registerModel: (name, Entity) => {
@@ -65,7 +65,7 @@ module.exports = sails => {
         // Make model stubs
         let entities = this.wetland.getEntityManager().getEntities();
 
-        Object.getOwnPropertyNames(entities).forEach(name => this.registerModel(name, entities[name]));
+        Object.getOwnPropertyNames(entities).forEach(name => hook.registerModel(name, entities[name]));
 
         // Override default blueprints
         Object.getOwnPropertyNames(blueprints).forEach(function(action) {
@@ -139,5 +139,7 @@ module.exports = sails => {
         }
       }
     }
-  }
+  };
+
+  return hook;
 };
