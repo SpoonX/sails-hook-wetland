@@ -15,10 +15,10 @@
     "type": "git",
     "url": "git+https://github.com/spoonx/sails-hook-wetland.git"
   },
-  "dependencies": {
-    "wetland": "^1.0.0-0"
-  },
   "sails": {
     "isHook": true
+  },
+  "dependencies": {
+    "wetland": "^1.0.0"
   }
 }
