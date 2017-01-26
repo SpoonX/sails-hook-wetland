@@ -80,7 +80,7 @@ module.exports = sails => {
           }
 
           if (sails.config.environment !== 'development') {
-            sails.log.warn(`Refusing to run dev migrations because environment '${sails.config.environment}' isn't developent.`);
+            sails.log.warn(`Refusing to run dev migrations because environment '${sails.config.environment}' isn't development.`);
 
             return callback();
           }
