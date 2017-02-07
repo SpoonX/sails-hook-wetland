@@ -2,7 +2,7 @@ const actionUtil = require('sails/lib/hooks/blueprints/actionUtil');
 const fallback   = require('sails/lib/hooks/blueprints/actions/update');
 const util       = require('util');
 
-module.exports = function updateOneRecord(req, res) {
+module.exports = function updateOneRecord(req, res, base, recursive) {
 
   // Look up the model
   let Model = actionUtil.parseModel(req);
@@ -34,14 +34,19 @@ module.exports = function updateOneRecord(req, res) {
   values[Model.primaryKey] = pk;
   let manager              = req.getManager();
   let populator            = req.wetland.getPopulator(manager);
+  base                     = base || populator.findDataForUpdate(pk, Model.Entity, values);
 
-  populator.findDataForUpdate(pk, Model.Entity, values).then(base => {
+  Promise.resolve(base).then(base => {
     if (!base) {
       return res.notFound();
     }
 
+    if (typeof recursive === 'undefined') {
+      recursive = 1;
+    }
+
     // Assign values to fetched base.
-    populator.assign(Model.Entity, values, base);
+    populator.assign(Model.Entity, values, base, recursive);
 
     // Apply changes.
     return manager.flush().then(() => res.ok(base));
