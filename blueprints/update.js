@@ -34,7 +34,7 @@ module.exports = function updateOneRecord(req, res, base, recursive) {
   values[Model.primaryKey] = pk;
   let manager              = req.getManager();
   let populator            = req.wetland.getPopulator(manager);
-  base                     = base || populator.findDataForUpdate(pk, Model.Entity, values);
+  base                     = typeof base === 'object' ? base : populator.findDataForUpdate(pk, Model.Entity, values);
 
   Promise.resolve(base).then(base => {
     if (!base) {
