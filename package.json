@@ -1,6 +1,6 @@
 {
   "name": "sails-hook-wetland",
-  "version": "1.2.0",
+  "version": "1.2.1",
   "description": "A sails hook that enables the use of wetland ORM.",
   "main": "index.js",
   "scripts": {
