@@ -36,9 +36,11 @@ module.exports = function updateOneRecord(req, res, base, recursive) {
   let populator            = req.wetland.getPopulator(manager);
   base                     = typeof base === 'object' ? base : populator.findDataForUpdate(pk, Model.Entity, values);
 
-  Promise.resolve(base).then(base => {
+  return Promise.resolve(base).then(base => {
     if (!base) {
-      return res.notFound();
+      res.notFound();
+
+      return false;
     }
 
     if (typeof recursive === 'undefined') {
@@ -49,6 +51,10 @@ module.exports = function updateOneRecord(req, res, base, recursive) {
     populator.assign(Model.Entity, values, base, recursive);
 
     // Apply changes.
-    return manager.flush().then(() => res.ok(base));
+    return manager.flush().then(() => {
+      res.ok(base);
+
+      return base;
+    });
   }).catch(res.negotiate);
 };

@@ -19,6 +19,6 @@
     "isHook": true
   },
   "dependencies": {
-    "wetland": "^1.1.0"
+    "wetland": "^1.5.1"
   }
 }
