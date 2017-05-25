@@ -10,7 +10,8 @@ const blueprints = {
   destroy : require('./blueprints/destroy'),
   populate: require('./blueprints/populate'),
   add     : require('./blueprints/add'),
-  remove  : require('./blueprints/remove')
+  remove  : require('./blueprints/remove'),
+  count   : require('./blueprints/count')
 };
 
 actionUtil.populateQuery = (query, associations, sails) => {
