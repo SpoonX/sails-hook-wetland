@@ -73,6 +73,23 @@ Documentation for these features will be added in the nearby future.
 
 This hook comes with all the default blueprints, and a count blueprint. It also adds some features for the current blueprints.
 
+### New: Additional config options
+
+Sails-hook-wetland offers additional options for blueprints.
+
+```js
+module.exports.blueprints = {
+
+  // Enabling this options will include the total count for the current query in the results using the value as header key.
+  // For instance, using 'X-Total-Count' as a value, will return the total count in the headers with every find request.
+  countInResponse: false,
+
+  // This option allows you to nest the response deeper.
+  // So, you could use 'data' as a value here, and all responses will be wrapped.
+  dataProperty: false
+};
+```
+
 ### Create and update
 
 Code speaks. Take a look at this:
@@ -176,7 +193,7 @@ If there's enough demand, this will be bumped up on the priority list.
 
 To be able to guarantee data safety, wetland uses transactions for all queries. These queries are calculated once you _flush the changes_.
 
-Flushing will trigger the unit of work to calculate changes you made (new, changed, removed and linked entities). 
+Flushing will trigger the unit of work to calculate changes you made (new, changed, removed and linked entities).
 
 ### No entity methods
 
@@ -186,9 +203,9 @@ Instead, you'll be using repositories to fetch data from the database. Each enti
 
 ### Migrations
 
-Wetland supports migrations, including creating, running and auto-running (dev migrations) them. 
+Wetland supports migrations, including creating, running and auto-running (dev migrations) them.
 
-TBD
+[Read more here](https://wetland.spoonx.org/Tutorial/snapshots.html)
 
 ### IDs on entities
 
@@ -202,8 +219,6 @@ The way you specify the _mappings_ for your entities is different.
 
 In api, create a directory called `entity`. This is where wetland will look for your entities (comparable to models for waterline).
 
-TBD
-
 ## Req methods
 
 ### req.getRepository([Entity])
@@ -215,8 +230,9 @@ If none was supplied, the Entity for the current blueprint will be used instead.
 
 ### req.getManager()
 
-TBD
+Use this method to get a new EntityManager scope.
+This is used to call persist on, for instance. Check the wetland docs for more info.
 
 ### req.wetland
 
-TBD
+A convenience property pointing to the wetland instance.
