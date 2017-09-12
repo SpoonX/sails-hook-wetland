@@ -67,10 +67,20 @@ module.exports = sails => {
 
         Object.getOwnPropertyNames(entities).forEach(name => hook.registerModel(name, entities[name]));
 
-        // Override default blueprints
-        Object.getOwnPropertyNames(blueprints).forEach(function(action) {
-          sails.hooks.blueprints.middleware[action] = blueprints[action];
-        });
+        if (sails.registerAction) { // Test if it's sails V1
+          for (modelIdentity in sails.models) {
+            for (blueprintName in blueprints) {
+              if (blueprints.hasOwnProperty(blueprintName)) {
+                sails.registerAction(blueprints[blueprintName], modelIdentity + '/' + blueprintName, true);
+              }
+            }
+          }
+        } else {
+          // Override default blueprints
+          Object.getOwnPropertyNames(blueprints).forEach(function (action) {
+            sails.hooks.blueprints.middleware[action] = blueprints[action];
+          });
+        }
 
         sails.wetland = this.wetland;
 
