@@ -50,7 +50,7 @@ module.exports = sails => {
     registerEntity: (name, Entity) => {
       this.wetland.registerEntity(Entity);
 
-      hook.registerModel(name, Entity);
+      hook.registerModel(name, {entity: Entity, mapping: this.wetland.getEntityManager().getMapping(Entity)});
     },
 
     registerModel: (name, Entity) => {
