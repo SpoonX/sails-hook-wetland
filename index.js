@@ -122,6 +122,10 @@ module.exports = sails => {
     routes: {
       before: {
         '*': (req, res, next) => {
+          if (!res.created) {
+            res.created = created.bind({req, res});
+          }
+
           let manager;
           let getManager = () => {
             if (!manager) {
