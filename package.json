@@ -19,6 +19,11 @@
     "isHook": true
   },
   "dependencies": {
-    "wetland": "^2.3.0"
+    "spoonx-tools": "^1.1.1",
+    "wetland": "^2.4.0"
+  },
+  "devDependencies": {
+    "babel": "^6.23.0",
+    "babel-eslint": "^8.0.2"
   }
 }
