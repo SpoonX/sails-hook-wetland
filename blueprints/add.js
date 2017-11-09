@@ -52,14 +52,16 @@ module.exports = function addToCollection(req, res) {
       return res.notFound();
     }
 
-    return req.getRepository(Model.Entity).findOne(parentPk, {populate: relationProperty}).then(result => {
-      if (!result) {
-        return res.notFound();
-      }
+    return req.getRepository(Model.Entity)
+      .findOne(parentPk, {populate: relationProperty})
+      .then(result => {
+        if (!result) {
+          return res.notFound();
+        }
 
-      result[relationProperty].add(resolvedChild);
+        result[relationProperty].add(resolvedChild);
 
-      return manager.flush().then(() => res.ok(result));
-    });
+        return manager.flush().then(() => res.ok(result));
+      });
   }).catch(res.negotiate);
 };

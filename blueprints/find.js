@@ -3,6 +3,7 @@
  */
 const actionUtil = require('sails/lib/hooks/blueprints/actionUtil');
 const fallback   = require('sails/lib/hooks/blueprints/actions/find');
+const findOne    = require('./findOne');
 const count      = require('../lib/count');
 
 module.exports = function findRecords(req, res) {
@@ -16,7 +17,7 @@ module.exports = function findRecords(req, res) {
   }
 
   if (actionUtil.parsePk(req)) {
-    return require('./findOne')(req, res);
+    return findOne(req, res);
   }
 
   let populate   = actionUtil.populateRequest(null, req);
@@ -25,7 +26,7 @@ module.exports = function findRecords(req, res) {
   let options    = {
     limit  : actionUtil.parseLimit(req),
     offset : actionUtil.parseSkip(req),
-    orderBy: actionUtil.parseSort(req)
+    orderBy: actionUtil.parseSort(req),
   };
 
   if (populate && populate.length && populate[0] !== undefined) {

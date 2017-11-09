@@ -1,9 +1,9 @@
 /**
  * Module dependencies
  */
+/* eslint-disable */
 var util = require('util'),
     actionUtil = require('sails/lib/hooks/blueprints/actionUtil');
-
 
 /**
  * Populate (or "expand") an association
@@ -26,6 +26,7 @@ module.exports = function expand(req, res) {
 
   var Model = actionUtil.parseModel(req);
   var relation = req.options.alias;
+
   if (!relation || !Model) return res.serverError();
 
   // Allow customizable blacklist for params.
@@ -50,9 +51,9 @@ module.exports = function expand(req, res) {
 
   var populate = sails.util.objCompact({
     where: where,
-    skip: actionUtil.parseSkip(req),
+    skip : actionUtil.parseSkip(req),
     limit: actionUtil.parseLimit(req),
-    sort: actionUtil.parseSort(req)
+    sort : actionUtil.parseSort(req)
   });
 
   Model

@@ -17,11 +17,14 @@ module.exports = function findOneRecord(req, res) {
     options.populate = populates;
   }
 
-  req.getRepository(Model.Entity).findOne(pk, options).then(matchingRecord => {
-    if (!matchingRecord) {
-      return res.notFound('No record found with the specified `id`.');
-    }
+  req.getRepository(Model.Entity)
+    .findOne(pk, options)
+    .then(matchingRecord => {
+      if (!matchingRecord) {
+        return res.notFound('No record found with the specified `id`.');
+      }
 
-    res.ok(matchingRecord);
-  }).catch(res.serverError);
+      res.ok(matchingRecord);
+    })
+    .catch(res.serverError);
 };

@@ -4,8 +4,6 @@
 const actionUtil = require('sails/lib/hooks/blueprints/actionUtil');
 const fallback   = require('sails/lib/hooks/blueprints/actions/remove');
 
-const MetaData = require('wetland').MetaData;
-
 module.exports = function removeFromCollection(req, res) {
   // Look up the model
   let Model = actionUtil.parseModel(req);
@@ -29,19 +27,21 @@ module.exports = function removeFromCollection(req, res) {
 
   let repository = req.getRepository(Model.Entity);
 
-  return repository.findOne(parentPk, {populate: relationProperty}).then(result => {
-    if (!result) {
-      return res.notFound();
-    }
+  return repository.findOne(parentPk, {populate: relationProperty})
+    .then(result => {
+      if (!result) {
+        return res.notFound();
+      }
 
-    let child = manager.getIdentityMap().fetch(ChildReference, childPk);
+      let child = manager.getIdentityMap().fetch(ChildReference, childPk);
 
-    if (!child) {
-      return res.ok(result);
-    }
+      if (!child) {
+        return res.ok(result);
+      }
 
-    result[relationProperty].remove(child);
+      result[relationProperty].remove(child);
 
-    return manager.flush().then(() => res.ok(result));
-  }).catch(res.negotiate);
+      return manager.flush().then(() => res.ok(result));
+    })
+    .catch(res.negotiate);
 };

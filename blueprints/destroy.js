@@ -21,11 +21,15 @@ module.exports = function destroyOneRecord(req, res) {
     options.populate = populate;
   }
 
-  return req.getRepository(Model.Entity).findOne(pk, options).then(record => {
-    if (!record) {
-      return res.notFound('No record found with the specified `id`.');
-    }
+  return req.getRepository(Model.Entity)
+    .findOne(pk, options)
+    .then(record => {
+      if (!record) {
+        return res.notFound('No record found with the specified `id`.');
+      }
 
-    return manager.remove(record).flush().then(() => res.ok(record));
-  }).catch(res.negotiate);
+      return manager.remove(record).flush()
+        .then(() => res.ok(record));
+    })
+    .catch(res.negotiate);
 };

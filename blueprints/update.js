@@ -1,6 +1,5 @@
 const actionUtil = require('sails/lib/hooks/blueprints/actionUtil');
 const fallback   = require('sails/lib/hooks/blueprints/actions/update');
-const util       = require('util');
 
 module.exports = function updateOneRecord(req, res, base, recursive) {
 
@@ -26,7 +25,7 @@ module.exports = function updateOneRecord(req, res, base, recursive) {
 
   // No matter what, don't allow changing the PK via the update blueprint
   // (you should just drop and re-add the record if that's what you really want)
-  if (typeof values[Model.primaryKey] !== 'undefined' && values[Model.primaryKey] != pk) {
+  if (typeof values[Model.primaryKey] !== 'undefined' && values[Model.primaryKey] != pk) { // eslint-disable-line eqeqeq
     req._sails.log.warn('Cannot change primary key via update blueprint; ignoring value sent for `' + Model.primaryKey + '`');
   }
 
@@ -34,27 +33,30 @@ module.exports = function updateOneRecord(req, res, base, recursive) {
   values[Model.primaryKey] = pk;
   let manager              = req.getManager();
   let populator            = req.wetland.getPopulator(manager);
-  base                     = typeof base === 'object' ? base : populator.findDataForUpdate(pk, Model.Entity, values);
 
-  return Promise.resolve(base).then(base => {
-    if (!base) {
-      res.notFound();
+  base = typeof base === 'object' ? base : populator.findDataForUpdate(pk, Model.Entity, values);
 
-      return false;
-    }
+  return Promise.resolve(base)
+    .then(base => { // eslint-disable-line no-shadow
+      if (!base) {
+        res.notFound();
 
-    if (typeof recursive === 'undefined') {
-      recursive = 1;
-    }
+        return false;
+      }
 
-    // Assign values to fetched base.
-    populator.assign(Model.Entity, values, base, recursive);
+      if (typeof recursive === 'undefined') {
+        recursive = 1;
+      }
 
-    // Apply changes.
-    return manager.flush().then(() => {
-      res.ok(base);
+      // Assign values to fetched base.
+      populator.assign(Model.Entity, values, base, recursive);
 
-      return base;
-    });
-  }).catch(res.negotiate);
+      // Apply changes.
+      return manager.flush().then(() => {
+        res.ok(base);
+
+        return base;
+      });
+    })
+    .catch(res.negotiate);
 };
