@@ -1,5 +1,5 @@
 module.exports.wetland = {
-  debug: false,
+  debug  : false,
   mapping: {
     // Automatically convert camel-cased property names to underscored column-names.
     // defaultNamesToUnderscore: false,

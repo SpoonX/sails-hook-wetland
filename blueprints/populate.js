@@ -23,7 +23,7 @@ module.exports = function findRecords(req, res) {
   repository.applyOptions(childQueryBuilder, {
     limit  : actionUtil.parseLimit(req),
     offset : actionUtil.parseSkip(req),
-    orderBy: actionUtil.parseSort(req)
+    orderBy: actionUtil.parseSort(req),
   });
 
   req.options.criteria           = req.options.criteria || {};
@@ -32,5 +32,8 @@ module.exports = function findRecords(req, res) {
   childQueryBuilder.select(childAlias).where(childPk ? {[childAlias]: childPk} : actionUtil.parseCriteria(req));
 
   // Return the property on the first result.
-  queryBuilder.getQuery().getResult().then(result => res.ok(Array.isArray(result) ? result[0][req.options.alias] : [])).catch(res.serverError);
+  queryBuilder.getQuery()
+    .getResult()
+    .then(result => res.ok(Array.isArray(result) ? result[0][req.options.alias] : []))
+    .catch(res.serverError);
 };

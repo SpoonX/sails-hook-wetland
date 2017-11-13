@@ -2,6 +2,7 @@ const Wetland    = require('wetland').Wetland;
 const actionUtil = require('sails/lib/hooks/blueprints/actionUtil');
 const Model      = require('./Model');
 const path       = require('path');
+/* eslint-disable global-require */
 const blueprints = {
   find    : require('./blueprints/find'),
   create  : require('./blueprints/create'),
@@ -11,15 +12,16 @@ const blueprints = {
   populate: require('./blueprints/populate'),
   add     : require('./blueprints/add'),
   remove  : require('./blueprints/remove'),
-  count   : require('./blueprints/count')
+  count   : require('./blueprints/count'),
 };
+/* eslint-enable global-require */
 
 actionUtil.populateQuery = (query, associations, sails) => {
   let defaultLimit = (sails && sails.config.blueprints.defaultLimit) || 30;
   let populates    = associations.map(association => {
     if (query) {
       query.populate(association.alias, {
-        limit: association.limit || defaultLimit
+        limit: association.limit || defaultLimit,
       });
     }
 
@@ -38,8 +40,8 @@ module.exports = sails => {
     defaults: () => {
       return {
         wetland: {
-          entityPath: path.resolve(process.cwd(), 'api', 'entity')
-        }
+          entityPath: path.resolve(process.cwd(), 'api', 'entity'),
+        },
       };
     },
 
@@ -59,6 +61,18 @@ module.exports = sails => {
       sails.models[model.identity] = model;
     },
 
+    registerActions: () => {
+      for (modelIdentity in sails.models) {
+        if (sails.models.hasOwnProperty(modelIdentity)) {
+          for (blueprintName in blueprints) {
+            if (blueprints.hasOwnProperty(blueprintName)) {
+              sails.registerAction(blueprints[blueprintName], modelIdentity + '/' + blueprintName, true);
+            }
+          }
+        }
+      }
+    },
+
     initialize: callback => {
       sails.on('hook:orm:loaded', () => {
         this.wetland = new Wetland(sails.config.wetland);
@@ -68,14 +82,8 @@ module.exports = sails => {
 
         Object.getOwnPropertyNames(entities).forEach(name => hook.registerModel(name, entities[name]));
 
-        if (sails.registerAction) { // Test if it's sails V1
-          for (modelIdentity in sails.models) {
-            for (blueprintName in blueprints) {
-              if (blueprints.hasOwnProperty(blueprintName)) {
-                sails.registerAction(blueprints[blueprintName], modelIdentity + '/' + blueprintName, true);
-              }
-            }
-          }
+        if (parseFloat(sails.version) >= 1) { // Test if it's sails V1
+          this.registerActions();
         } else {
           // Override default blueprints
           Object.getOwnPropertyNames(blueprints).forEach(function (action) {
@@ -104,15 +112,17 @@ module.exports = sails => {
 
           sails.log.verbose('Starting dev migrations...');
 
-          this.wetland.getMigrator().devMigrations().then(() => {
-            sails.log.verbose('Running dev migrations happened successfully.');
+          this.wetland.getMigrator().devMigrations()
+            .then(() => {
+              sails.log.verbose('Running dev migrations happened successfully.');
 
-            callback();
-          }).catch(error => {
-            sails.log.error('Running dev migrations failed.');
+              callback();
+            })
+            .catch(error => {
+              sails.log.error('Running dev migrations failed.');
 
-            callback(error);
-          });
+              callback(error);
+            });
         } else {
           return callback();
         }
@@ -151,9 +161,9 @@ module.exports = sails => {
 
           // You may now proceed, peasant.
           return next();
-        }
-      }
-    }
+        },
+      },
+    },
   };
 
   return hook;

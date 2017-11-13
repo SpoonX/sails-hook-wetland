@@ -12,9 +12,12 @@ module.exports = function createRecord(req, res, recursive) {
   let manager   = req.getManager();
   let newRecord = req.wetland.getPopulator(manager).assign(Model.Entity, data, null, recursive);
 
-  return manager.persist(newRecord).flush().then(() => {
-    res.created(newRecord);
+  return manager.persist(newRecord)
+    .flush()
+    .then(() => {
+      res.created(newRecord);
 
-    return newRecord;
-  }).catch(res.serverError);
+      return newRecord;
+    })
+    .catch(res.serverError);
 };
