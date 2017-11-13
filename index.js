@@ -82,7 +82,7 @@ module.exports = sails => {
 
         Object.getOwnPropertyNames(entities).forEach(name => hook.registerModel(name, entities[name]));
 
-        if (sails.registerAction) { // Test if it's sails V1
+        if (parseFloat(sails.version) >= 1) { // Test if it's sails V1
           this.registerActions();
         } else {
           // Override default blueprints
