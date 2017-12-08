@@ -2,6 +2,7 @@ const Wetland    = require('wetland').Wetland;
 const actionUtil = require('sails/lib/hooks/blueprints/actionUtil');
 const Model      = require('./Model');
 const path       = require('path');
+const created    = require('./lib/created');
 const blueprints = {
   find    : require('./blueprints/find'),
   create  : require('./blueprints/create'),
